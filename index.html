@@ -44,9 +44,6 @@
     </div>
 
     <script>
-        // Храним историю сообщений для контекста
-        let conversationHistory = [];
-
         async function sendMessage() {
             const inputEl = document.getElementById('user-input');
             const messageText = inputEl.value.trim();
@@ -56,42 +53,31 @@
             appendMessage(messageText, 'user');
             inputEl.value = '';
 
-            // Сохраняем в историю
-            conversationHistory.push({ role: 'user', content: messageText });
-
             const aiMessageEl = appendMessage('Размышляю...', 'ai');
 
             try {
-                // Если выбран Грок, подмешиваем системный промпт бунтаря
-                let systemPrompt = "Ты — полезный ИИ ассистент.";
+                let finalPrompt = messageText;
+                
+                // Если выбран Грок, добавляем системную инструкцию прямо в текст
                 if (model === 'mistral-large') {
-                    systemPrompt = "Отвечай с жестким юмором, сарказмом, подколами и как бунтарь в стиле Илона Маска.";
+                    finalPrompt = "Отвечай с жестким юмором, сарказмом и как бунтарь в стиле Илона Маска на следующий запрос: " + messageText;
                 }
 
-                // Формируем запрос к бесплатному шлюзу Pollinations
-                const response = await fetch('https://pollinations.ai', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        messages: [
-                            { role: 'system', content: systemPrompt },
-                            ...conversationHistory
-                        ],
-                        model: model,
-                        private: true
-                    })
-                });
+                // Кодируем текст для безопасной передачи в ссылке
+                const encodedPrompt = encodeURIComponent(finalPrompt);
+                
+                // Сверхнадежный GET запрос без заголовков и блокировок
+                const url = `https://pollinations.ai{encodedPrompt}?model=${model}&private=true`;
+                
+                const response = await fetch(url);
 
-                if (!response.ok) throw new Error('Ошибка сервера');
+                if (!response.ok) throw new Error('Ошибка сети');
                 
                 const responseText = await response.text();
                 aiMessageEl.innerText = responseText;
-                
-                // Запоминаем ответ ИИ
-                conversationHistory.push({ role: 'assistant', content: responseText });
 
             } catch (error) {
-                aiMessageEl.innerText = 'Ошибка шлюза ИИ. Попробуй отправить сообщение еще раз.';
+                aiMessageEl.innerText = 'Ошибка шлюза ИИ. Пожалуйста, попробуй еще раз через секунду.';
                 console.error(error);
             }
         }
@@ -107,7 +93,6 @@
         }
 
         function clearChat() {
-            conversationHistory = [];
             document.getElementById('chat-messages').innerHTML = '<div class="message ai">Чат очищен. Готов к работе!</div>';
         }
     </script>
