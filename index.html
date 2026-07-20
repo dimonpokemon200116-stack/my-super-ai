@@ -5,96 +5,136 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Семейный ИИ-Хаб</title>
     <style>
-        body { margin: 0; background-color: #0d1117; color: #c9d1d9; font-family: -apple-system, sans-serif; display: flex; height: 100vh; }
-        #sidebar { width: 260px; background-color: #161b22; padding: 20px; display: flex; flex-direction: column; gap: 15px; border-right: 1px solid #30363d; }
-        #chat-container { flex: 1; display: flex; flex-direction: column; background-color: #0d1117; }
-        #chat-messages { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; }
-        .message { padding: 12px 16px; border-radius: 8px; max-width: 75%; line-height: 1.5; white-space: pre-wrap; }
-        .user { background-color: #21262d; align-self: flex-end; color: #f0f6fc; }
-        .ai { background-color: #238636; align-self: flex-start; color: #ffffff; }
-        #input-area { padding: 20px; background-color: #161b22; display: flex; gap: 10px; border-top: 1px solid #30363d; }
-        select, textarea, button { background-color: #21262d; color: #f0f6fc; border: 1px solid #30363d; padding: 10px; border-radius: 6px; font-size: 14px; }
-        textarea { flex: 1; resize: none; height: 40px; }
-        button { background-color: #238636; cursor: pointer; font-weight: bold; border: none; }
-        button:hover { background-color: #2ea043; }
-        h3 { margin-top: 0; color: #58a6ff; }
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #0d1117;
+            color: #c9d1d9;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+
+        .container {
+            text-align: center;
+            max-width: 800px;
+            padding: 40px 20px;
+        }
+
+        h1 {
+            color: #58a6ff;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 0 0 10px rgba(88, 166, 255, 0.3);
+        }
+
+        p {
+            color: #8b949e;
+            font-size: 1.2rem;
+            margin-bottom: 40px;
+        }
+
+        .grid {
+            display: flex;
+            gap: 25px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .card {
+            background-color: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 12px;
+            width: 280px;
+            padding: 30px;
+            text-align: left;
+            transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            flex-direction: column;
+            cursor: pointer;
+        }
+
+        /* Эффект свечения при наведении для ChatGPT */
+        .card.gpt:hover {
+            transform: translateY(-5px);
+            border-color: #238636;
+            box-shadow: 0 5px 20px rgba(35, 134, 54, 0.4);
+        }
+
+        /* Эффект свечения при наведении для Грока */
+        .card.grok:hover {
+            transform: translateY(-5px);
+            border-color: #f0f6fc;
+            box-shadow: 0 5px 20px rgba(240, 246, 252, 0.2);
+        }
+
+        .icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+
+        .card h2 {
+            margin: 0 0 10px 0;
+            font-size: 1.5rem;
+        }
+
+        .card.gpt h2 { color: #2ea043; }
+        .card.grok h2 { color: #f0f6fc; }
+
+        .card p {
+            font-size: 0.95rem;
+            color: #8b949e;
+            margin: 0;
+            line-height: 1.4;
+        }
+
+        .footer {
+            margin-top: 60px;
+            font-size: 0.9rem;
+            color: #8b949e;
+            border-top: 1px solid #21262d;
+            padding-top: 20px;
+            width: 100%;
+        }
+        
+        .author {
+            color: #58a6ff;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
 
-    <div id="sidebar">
-        <h3>Семейный ИИ-Хаб</h3>
-        <label for="model-select">Выбери модель:</label>
-        <select id="model-select">
-            <option value="openai">GPT-5.6 Sol (Монстр OpenAI)</option>
-            <option value="mistral-large">Grok 4.6 Heavy (Илон Маск / Бунтарь)</option>
-            <option value="qwen">Claude 5 Sonnet (Король Кода)</option>
-        </select>
-        <button onclick="clearChat()" style="background-color: #da3637; margin-top: auto;">Очистить чат</button>
+    <div class="container">
+        <h1>🌌 Семейный ИИ-Хаб</h1>
+        <p>Добро пожаловать! Персональная панель управления лучшими мировыми нейросетями.</p>
+
+        <div class="grid">
+            <!-- КНОПКА ЧАТ ГПТ -->
+            <a href="https://chatgpt.com" target="_blank" class="card gpt">
+                <div class="icon">🌸</div>
+                <h2>ChatGPT</h2>
+                <p>Оригинальный ИИ от OpenAI. Идеально подходит Маме для создания самых милых, добрых и вежливых сообщений для родительских чатов.</p>
+            </a>
+
+            <!-- КНОПКА ГРОК -->
+            <a href="https://grok.com" target="_blank" class="card grok">
+                <div class="icon">🚀</div>
+                <h2>Grok AI</h2>
+                <p>Оригинальная нейросеть от Илона Маска. Работает в реальном времени, имеет доступ к сети X, отлично подходит для сложных задач, фана и кода.</p>
+            </a>
+        </div>
+
+        <div class="footer">
+            Создано разработчиком <span class="author">dimonpokemon</span> для любимой мамы и всей семьи ✨
+        </div>
     </div>
 
-    <div id="chat-container">
-        <div id="chat-messages">
-            <div class="message ai">Привет! Я ваш семейный безлимитный ИИ-ассистент. dimonpokemon может писать тут скрипты для Roblox, а мама — составлять вежливые сообщения для работы. Выберите модель слева и напишите мне!</div>
-        </div>
-        <div id="input-area">
-            <textarea id="user-input" placeholder="Напишите сообщение или вставьте ссылку..."></textarea>
-            <button onclick="sendMessage()">Отправить</button>
-        </div>
-    </div>
-
-    <script>
-        async function sendMessage() {
-            const inputEl = document.getElementById('user-input');
-            const messageText = inputEl.value.trim();
-            const model = document.getElementById('model-select').value;
-            if (!messageText) return;
-
-            appendMessage(messageText, 'user');
-            inputEl.value = '';
-
-            const aiMessageEl = appendMessage('Размышляю...', 'ai');
-
-            try {
-                let finalPrompt = messageText;
-                
-                // Если выбран Грок, добавляем системную инструкцию прямо в текст
-                if (model === 'mistral-large') {
-                    finalPrompt = "Отвечай с жестким юмором, сарказмом и как бунтарь в стиле Илона Маска на следующий запрос: " + messageText;
-                }
-
-                // Кодируем текст для безопасной передачи в ссылке
-                const encodedPrompt = encodeURIComponent(finalPrompt);
-                
-                // Сверхнадежный GET запрос без заголовков и блокировок
-                const url = `https://pollinations.ai{encodedPrompt}?model=${model}&private=true`;
-                
-                const response = await fetch(url);
-
-                if (!response.ok) throw new Error('Ошибка сети');
-                
-                const responseText = await response.text();
-                aiMessageEl.innerText = responseText;
-
-            } catch (error) {
-                aiMessageEl.innerText = 'Ошибка шлюза ИИ. Пожалуйста, попробуй еще раз через секунду.';
-                console.error(error);
-            }
-        }
-
-        function appendMessage(text, sender) {
-            const chatMessages = document.getElementById('chat-messages');
-            const messageEl = document.createElement('div');
-            messageEl.classList.add('message', sender);
-            messageEl.innerText = text;
-            chatMessages.appendChild(messageEl);
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-            return messageEl;
-        }
-
-        function clearChat() {
-            document.getElementById('chat-messages').innerHTML = '<div class="message ai">Чат очищен. Готов к работе!</div>';
-        }
-    </script>
 </body>
 </html>
